@@ -99,10 +99,45 @@ function getCompletedLessons() {
 function clearLessonProgress() {
     try {
         localStorage.removeItem('completedLessons');
+        localStorage.removeItem('lessonQuestionResults');
         return true;
     } catch (error) {
         console.error('Failed to clear lesson progress:', error);
         return false;
+    }
+}
+
+// Save question results for a specific lesson
+function saveQuestionResults(lessonId, questionResults) {
+    try {
+        const allResults = getAllQuestionResults();
+        allResults[lessonId] = questionResults;
+        localStorage.setItem('lessonQuestionResults', JSON.stringify(allResults));
+        return true;
+    } catch (error) {
+        console.error('Failed to save question results:', error);
+        return false;
+    }
+}
+
+// Get question results for a specific lesson
+function getQuestionResults(lessonId) {
+    try {
+        const allResults = getAllQuestionResults();
+        return allResults[lessonId] || {};
+    } catch (error) {
+        console.error('Failed to get question results:', error);
+        return {};
+    }
+}
+
+// Get all question results for all lessons
+function getAllQuestionResults() {
+    try {
+        const data = localStorage.getItem('lessonQuestionResults');
+        return data ? JSON.parse(data) : {};
+    } catch (error) {
+        return {};
     }
 }
 
@@ -115,5 +150,8 @@ window.saveManager = {
     getSaveTimestamp,
     saveLessonCompletion,
     getCompletedLessons,
-    clearLessonProgress
+    clearLessonProgress,
+    saveQuestionResults,
+    getQuestionResults,
+    getAllQuestionResults
 };
