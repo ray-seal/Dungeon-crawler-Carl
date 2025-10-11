@@ -1,11 +1,17 @@
-const CACHE_NAME = 'dungeon-crawler-carl-v2';
+const CACHE_NAME = 'dungeon-crawler-carl-v3';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
+  '/lessons.css',
   '/app.js',
   '/game.js',
   '/terminal.js',
+  '/ui-components.js',
+  '/save-manager.js',
+  '/lessons.html',
+  '/lessons.js',
+  '/lesson-data.js',
   '/manifest.json',
   '/icon.png',
   '/icon-512.png'

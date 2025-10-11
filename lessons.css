@@ -350,3 +350,34 @@
         gap: 10px;
     }
 }
+
+/* Lesson Level Headers */
+.lesson-level-header {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffff00;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 8px 10px;
+    background-color: rgba(255, 255, 0, 0.1);
+    border-left: 4px solid #ffff00;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.lesson-level-header:first-child {
+    margin-top: 0;
+}
+
+/* Lesson Checkmark */
+.lesson-checkmark {
+    color: #00ff00;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Remove the duplicate ::before pseudo-element for completed lessons */
+.lesson-item.completed::before {
+    content: none;
+}
+
