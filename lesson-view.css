@@ -96,6 +96,67 @@
     color: #00ff00;
 }
 
+/* Question Header */
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.question-counter {
+    color: #ffff00;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Question Container */
+.question-container {
+    margin-bottom: 15px;
+    min-height: 100px;
+}
+
+.question-text {
+    color: #00ff00;
+    font-size: 16px;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Multiple Choice Options */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: rgba(0, 255, 0, 0.1);
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option-item:hover {
+    background-color: rgba(0, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+}
+
+.option-item input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.option-item label {
+    color: #00ff00;
+    cursor: pointer;
+    flex: 1;
+}
+
 /* Fill in the Blanks */
 .fill-in-blanks {
     font-family: 'Courier New', monospace;
@@ -132,56 +193,7 @@
     background-color: rgba(255, 0, 0, 0.2);
 }
 
-.btn-check {
-    padding: 10px 20px;
-    background-color: #00ffff;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-check:hover {
-    background-color: #00cccc;
-    box-shadow: 0 0 15px #00ffff;
-}
-
-.result-message {
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    display: none;
-}
-
-.result-message.show {
-    display: block;
-}
-
-.result-message.success {
-    background-color: rgba(0, 255, 0, 0.2);
-    border: 2px solid #00ff00;
-    color: #00ff00;
-}
-
-.result-message.error {
-    background-color: rgba(255, 0, 0, 0.2);
-    border: 2px solid #ff0000;
-    color: #ff0000;
-}
-
-/* Your Turn Section */
-.practice-prompt {
-    color: #00ff00;
-    margin-bottom: 15px;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
+/* Practice Editor (for code questions) */
 .practice-editor {
     width: 100%;
     min-height: 150px;
@@ -230,6 +242,88 @@
 .practice-output .success-line {
     color: #00ffff;
     font-weight: bold;
+}
+
+.btn-check {
+    padding: 10px 20px;
+    background-color: #00ffff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-check:hover {
+    background-color: #00cccc;
+    box-shadow: 0 0 15px #00ffff;
+}
+
+.result-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: none;
+}
+
+.result-message.show {
+    display: block;
+}
+
+.result-message.success {
+    background-color: rgba(0, 255, 0, 0.2);
+    border: 2px solid #00ff00;
+    color: #00ff00;
+}
+
+.result-message.error {
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 2px solid #ff0000;
+    color: #ff0000;
+}
+
+.result-message small {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Question Navigation */
+.question-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #00ff00;
+}
+
+.btn-question-nav {
+    padding: 8px 16px;
+    background-color: #ffff00;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-question-nav:hover:not(:disabled) {
+    background-color: #cccc00;
+    box-shadow: 0 0 15px #ffff00;
+}
+
+.btn-question-nav:disabled {
+    background-color: #333;
+    color: #666;
+    cursor: not-allowed;
 }
 
 /* Lesson Navigation */

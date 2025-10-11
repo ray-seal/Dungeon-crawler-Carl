@@ -30,24 +30,30 @@
                 <div id="lessonExplanation" class="lesson-explanation"></div>
             </div>
 
-            <!-- Fill in the Blanks Section -->
+            <!-- Questions Section -->
             <div class="lesson-section">
-                <h2>✏️ Fill in the Blanks</h2>
-                <div id="fillInBlanks" class="fill-in-blanks"></div>
-                <button id="checkBlanks" class="btn-check">Check Answer</button>
-                <div id="blanksResult" class="result-message"></div>
+                <div class="question-header">
+                    <h2>❓ Questions</h2>
+                    <div id="questionCounter" class="question-counter"></div>
+                </div>
+                
+                <!-- Question Container -->
+                <div id="questionContainer" class="question-container"></div>
+                
+                <!-- Check Answer Button -->
+                <button id="checkAnswer" class="btn-check">Check Answer</button>
+                
+                <!-- Result Message -->
+                <div id="questionResult" class="result-message"></div>
+
+                <!-- Question Navigation -->
+                <div class="question-navigation">
+                    <button id="prevQuestion" class="btn-question-nav">← Previous</button>
+                    <button id="nextQuestion" class="btn-question-nav">Next →</button>
+                </div>
             </div>
 
-            <!-- Your Turn Section -->
-            <div class="lesson-section">
-                <h2>🎯 Your Turn - Practice</h2>
-                <div id="practicePrompt" class="practice-prompt"></div>
-                <textarea id="practiceEditor" class="practice-editor" placeholder="// Write your JavaScript code here..."></textarea>
-                <button id="runPractice" class="btn-run">Run Code ▶</button>
-                <div id="practiceOutput" class="practice-output"></div>
-            </div>
-
-            <!-- Navigation -->
+            <!-- Lesson Navigation -->
             <div class="lesson-navigation">
                 <button id="prevLesson" class="btn-nav">← Previous Lesson</button>
                 <button id="nextLesson" class="btn-nav">Next Lesson →</button>
