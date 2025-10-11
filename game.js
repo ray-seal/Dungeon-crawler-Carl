@@ -9,7 +9,8 @@ const gameState = {
     unlockedDoors: [],
     defeatedEnemies: [],
     exploredRooms: ['entrance'],
-    visitedRooms: ['entrance']
+    visitedRooms: ['entrance'],
+    playerName: 'Carl'
 };
 
 // Room Definitions
@@ -455,6 +456,7 @@ function initGame() {
             gameState.defeatedEnemies = savedState.defeatedEnemies || [];
             gameState.exploredRooms = savedState.exploredRooms || ['entrance'];
             gameState.visitedRooms = savedState.visitedRooms || ['entrance'];
+            gameState.playerName = savedState.playerName || 'Carl';
             
             clearGameplay();
             appendToGameplay(`<p class="highlight">🎮 Welcome back to Dungeon Crawler Carl!</p>`);
@@ -468,6 +470,7 @@ function initGame() {
     // Start new game
     clearGameplay();
     appendToGameplay(`<p class="highlight">🎮 Welcome to Dungeon Crawler Carl!</p>`);
+    appendToGameplay(`<p class="success">Your name is Carl. You have awoken from your sleep in this dungeon. Can you fight your way to freedom?</p>`);
     appendToGameplay(`<p>Learn JavaScript by solving coding challenges in this text-based adventure.</p>`);
     appendToGameplay(`<p>Use the terminal below for commands (type "help" for available commands).</p>`);
     appendToGameplay(`<p>Write code in the Code Challenge box and click "Run Code" to solve puzzles.</p>`);
