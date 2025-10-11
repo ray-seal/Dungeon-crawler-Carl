@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Learn to code JavaScript through a text-based dungeon crawler adventure">
+    <title>Dungeon Crawler Carl</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
+<body>
+    <div class="container">
+        <!-- Title Bar -->
+        <header class="title-bar">
+            <h1>🏰 Dungeon Crawler Carl - Learn JavaScript by Coding</h1>
+        </header>
+
+        <!-- Code Editor Section -->
+        <section class="code-section">
+            <h2>Code Challenge</h2>
+            <div class="code-editor-wrapper">
+                <textarea id="codeEditor" class="code-editor" placeholder="// Write your JavaScript code here to solve the challenge..."></textarea>
+                <button id="runCode" class="btn-run">Run Code ▶</button>
+            </div>
+        </section>
+
+        <!-- Gameplay Text Area -->
+        <section class="gameplay-section">
+            <h2>Adventure Log</h2>
+            <div id="gameplayText" class="gameplay-text"></div>
+        </section>
+
+        <!-- Terminal Section -->
+        <section class="terminal-section">
+            <h2>Terminal</h2>
+            <div id="terminal" class="terminal-output"></div>
+            <div class="terminal-input-wrapper">
+                <span class="terminal-prompt">$ </span>
+                <input type="text" id="terminalInput" class="terminal-input" placeholder="Type commands (help, cd, sudo, hint, inventory)..." autocomplete="off">
+            </div>
+        </section>
+    </div>
+
+    <script src="game.js"></script>
+    <script src="terminal.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
