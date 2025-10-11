@@ -50,6 +50,22 @@ function initLessons() {
     
     currentLessonIndex = lessonIndex;
 
+    // Load saved question results for this lesson
+    const lesson = lessons[lessonIndex];
+    if (window.saveManager) {
+        questionResults = window.saveManager.getQuestionResults(lesson.id);
+    } else {
+        try {
+            const allResults = localStorage.getItem('lessonQuestionResults');
+            if (allResults) {
+                const parsed = JSON.parse(allResults);
+                questionResults = parsed[lesson.id] || {};
+            }
+        } catch (error) {
+            console.error('Failed to load question results:', error);
+        }
+    }
+
     renderLessonList();
     loadLesson(currentLessonIndex);
     setupEventListeners();
@@ -127,7 +143,24 @@ function loadLesson(index) {
     const lesson = lessons[index];
     currentLessonIndex = index;
     currentQuestionIndex = 0; // Reset to first question
-    questionResults = {}; // Reset results
+    
+    // Load saved question results for this lesson instead of resetting
+    if (window.saveManager) {
+        questionResults = window.saveManager.getQuestionResults(lesson.id);
+    } else {
+        try {
+            const allResults = localStorage.getItem('lessonQuestionResults');
+            if (allResults) {
+                const parsed = JSON.parse(allResults);
+                questionResults = parsed[lesson.id] || {};
+            } else {
+                questionResults = {};
+            }
+        } catch (error) {
+            console.error('Failed to load question results:', error);
+            questionResults = {};
+        }
+    }
 
     // Update title
     document.getElementById('lessonTitle').textContent = lesson.title;
@@ -359,6 +392,20 @@ function checkAnswer() {
 
     // Store result
     questionResults[question.id] = { correct: isCorrect, explanation: question.explanation };
+
+    // Save question results to localStorage
+    if (window.saveManager) {
+        window.saveManager.saveQuestionResults(lesson.id, questionResults);
+    } else {
+        try {
+            const allResults = localStorage.getItem('lessonQuestionResults');
+            const parsed = allResults ? JSON.parse(allResults) : {};
+            parsed[lesson.id] = questionResults;
+            localStorage.setItem('lessonQuestionResults', JSON.stringify(parsed));
+        } catch (error) {
+            console.error('Failed to save question results:', error);
+        }
+    }
 
     // Show result
     showQuestionResult({ correct: isCorrect, explanation: question.explanation });
