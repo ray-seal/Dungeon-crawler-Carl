@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dungeon-crawler-carl-v1';
+const CACHE_NAME = 'dungeon-crawler-carl-v2';
 const urlsToCache = [
   '/',
   '/index.html',

@@ -2,10 +2,6 @@
 const terminalHistory = [];
 let historyIndex = -1;
 
-// Terminal Functions
-const terminalHistory = [];
-let historyIndex = -1;
-
 function appendToTerminal(text, type = 'output') {
     const terminal = document.getElementById('terminal');
     const line = document.createElement('div');
@@ -255,6 +251,10 @@ function handleSudo(args) {
             }
             break;
             
+        case 'tips':
+            showTipsGuide();
+            break;
+            
         default:
             appendToTerminal(`sudo: ${subCommand}: command not found`, 'error');
     }
@@ -269,7 +269,7 @@ function showManual(command) {
     const manuals = {
         'cd': 'cd - change directory (move between rooms)\nUsage: cd [north|south|east|west]',
         'ls': 'ls - list directory contents (show exits)\nUsage: ls',
-        'sudo': 'sudo - execute command with elevated privileges\nUsage: sudo [heal|reveal|unlock]',
+        'sudo': 'sudo - execute command with elevated privileges\nUsage: sudo [heal|reveal|unlock|tips]',
         'hint': 'hint - display a hint for the current challenge\nUsage: hint',
         'help': 'help - display available commands\nUsage: help'
     };
@@ -303,6 +303,81 @@ function handleCat(filename) {
     appendToTerminal(files[filename] || `cat: ${filename}: No such file or directory`, files[filename] ? undefined : 'error');
 }
 
+function showTipsGuide() {
+    // Build tips guide using DOM manipulation
+    const container = document.createElement('div');
+    
+    const titleDiv = document.createElement('div');
+    titleDiv.style.color = '#00ffff';
+    titleDiv.style.fontWeight = 'bold';
+    titleDiv.textContent = '📚 Programming & Terminal Commands Guide';
+    container.appendChild(titleDiv);
+    container.appendChild(document.createElement('br'));
+    
+    const sections = [
+        {
+            title: 'Programming Commands:',
+            color: '#ffff00',
+            commands: [
+                { name: 'console.log', desc: 'Prints output to the browser console (JavaScript).' },
+                { name: 'print', desc: 'Prints output (Python).' },
+                { name: 'if', desc: 'Conditional statement (JavaScript, Python, etc.).' }
+            ]
+        },
+        {
+            title: 'Terminal Commands:',
+            color: '#00ff00',
+            commands: [
+                { name: 'cd', desc: 'Change directory.' },
+                { name: 'sudo', desc: 'Run command with superuser privileges.' },
+                { name: 'ls', desc: 'List files in the current directory.' },
+                { name: 'mkdir', desc: 'Create a new directory.' },
+                { name: 'rm', desc: 'Remove files or directories.' }
+            ]
+        }
+    ];
+    
+    sections.forEach(section => {
+        const sectionTitle = document.createElement('div');
+        sectionTitle.style.color = section.color;
+        sectionTitle.style.fontWeight = 'bold';
+        sectionTitle.style.marginTop = '10px';
+        sectionTitle.textContent = section.title;
+        container.appendChild(sectionTitle);
+        
+        section.commands.forEach(cmd => {
+            const cmdDiv = document.createElement('div');
+            cmdDiv.style.marginLeft = '10px';
+            cmdDiv.style.marginTop = '5px';
+            
+            const cmdName = document.createElement('span');
+            cmdName.style.color = '#00ffff';
+            cmdName.style.fontWeight = 'bold';
+            cmdName.textContent = cmd.name + ': ';
+            
+            const cmdDesc = document.createElement('span');
+            cmdDesc.style.color = '#ffffff';
+            cmdDesc.textContent = cmd.desc;
+            
+            cmdDiv.appendChild(cmdName);
+            cmdDiv.appendChild(cmdDesc);
+            container.appendChild(cmdDiv);
+        });
+        
+        container.appendChild(document.createElement('br'));
+    });
+    
+    const footerDiv = document.createElement('div');
+    footerDiv.style.color = '#ffff00';
+    footerDiv.style.marginTop = '10px';
+    footerDiv.textContent = '💡 Tip: Use these commands to navigate and solve challenges!';
+    container.appendChild(footerDiv);
+    
+    const terminal = document.getElementById('terminal');
+    terminal.appendChild(container);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
 // Terminal initialization
 function initTerminal() {
     appendToTerminal('Dungeon Crawler Carl Terminal v1.0', 'success');
@@ -334,6 +409,17 @@ document.getElementById('terminalInput').addEventListener('keydown', function(ev
             this.value = '';
         }
     }
+});
+
+// Event listener for Send Command button
+document.getElementById('sendCommand').addEventListener('click', function() {
+    const terminalInput = document.getElementById('terminalInput');
+    const command = terminalInput.value.trim();
+    if (command) {
+        processCommand(command);
+        terminalInput.value = '';
+    }
+    terminalInput.focus();
 });
 
 // Export terminal functions
