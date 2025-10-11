@@ -116,6 +116,17 @@
     min-height: 100px;
 }
 
+.no-questions-message {
+    padding: 20px;
+    text-align: center;
+    color: #ffff00;
+    background-color: rgba(255, 255, 0, 0.1);
+    border: 2px dashed #ffff00;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 20px 0;
+}
+
 .question-text {
     color: #00ff00;
     font-size: 16px;

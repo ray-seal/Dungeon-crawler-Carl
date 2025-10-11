@@ -10,6 +10,15 @@ let questionResults = {}; // Track results for each question
 
 // Initialize lessons page
 function initLessons() {
+    // Check if lesson data is loaded
+    if (!lessons || lessons.length === 0) {
+        console.error('Lesson data not loaded properly');
+        document.getElementById('lessonTitle').textContent = 'Error: Lessons Not Loaded';
+        document.getElementById('lessonExplanation').innerHTML = 
+            '<p style="color: #ff0000;">Failed to load lesson data. Please refresh the page.</p>';
+        return;
+    }
+    
     // Load completed lessons from save manager or localStorage
     if (window.saveManager) {
         completedLessons = window.saveManager.getCompletedLessons();
@@ -137,8 +146,24 @@ function loadLesson(index) {
 // Load a specific question
 function loadQuestion(questionIndex) {
     const lesson = lessons[currentLessonIndex];
-    if (!lesson.questions || questionIndex < 0 || questionIndex >= lesson.questions.length) return;
+    
+    // Handle missing or empty questions array
+    if (!lesson.questions || lesson.questions.length === 0) {
+        document.getElementById('questionContainer').innerHTML = 
+            '<div class="no-questions-message">📝 Questions for this lesson are coming soon!</div>';
+        document.getElementById('questionCounter').textContent = 'No questions available yet';
+        document.getElementById('prevQuestion').disabled = true;
+        document.getElementById('nextQuestion').disabled = true;
+        document.getElementById('checkAnswer').style.display = 'none';
+        return;
+    }
+    
+    // Handle invalid question index
+    if (questionIndex < 0 || questionIndex >= lesson.questions.length) return;
 
+    // Show check answer button
+    document.getElementById('checkAnswer').style.display = 'block';
+    
     currentQuestionIndex = questionIndex;
     const question = lesson.questions[questionIndex];
 
