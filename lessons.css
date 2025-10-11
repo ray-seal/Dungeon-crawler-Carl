@@ -196,21 +196,59 @@
         flex-direction: column;
         gap: 10px;
         text-align: center;
+        padding: 12px;
+    }
+
+    .lesson-select-container .title-bar h1 {
+        font-size: 1.1rem;
+        line-height: 1.3;
+    }
+
+    .btn-back {
+        width: 100%;
+        max-width: 200px;
     }
 
     .lesson-grid-container {
-        padding: 15px;
+        padding: 12px;
+    }
+
+    .intro-section {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+
+    .intro-section h2 {
+        font-size: 1.2rem;
+        line-height: 1.3;
+    }
+
+    .intro-section p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    .level-header {
+        font-size: 1.1rem;
+        padding: 8px;
+        line-height: 1.3;
     }
 
     .level-lessons {
         grid-template-columns: 1fr;
     }
 
-    .intro-section h2 {
-        font-size: 1.4rem;
+    .lesson-card {
+        padding: 15px;
     }
 
-    .intro-section p {
-        font-size: 0.9rem;
+    .lesson-card-title {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+
+    .lesson-card-description {
+        font-size: 0.85rem;
+        line-height: 1.5;
     }
 }

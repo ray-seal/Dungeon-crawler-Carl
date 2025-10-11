@@ -27,32 +27,35 @@ body {
     border: 2px solid #00ff00;
     border-radius: 5px;
     text-align: center;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .title-bar h1 {
     font-size: 1.5rem;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00;
-    flex: 1;
+    margin: 0;
+}
+
+/* Lessons Button Container */
+.lessons-button-container {
+    display: flex;
+    justify-content: center;
+    padding: 0;
 }
 
 .btn-lessons {
-    position: absolute;
-    right: 15px;
-    padding: 8px 15px;
+    padding: 10px 20px;
     background-color: #00ff00;
     color: #000;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     font-family: 'Courier New', monospace;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
 }
 
 .btn-lessons:hover {
@@ -264,7 +267,13 @@ h2 {
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .title-bar h1 {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        line-height: 1.3;
+    }
+
+    .btn-lessons {
+        font-size: 0.95rem;
+        padding: 10px 15px;
     }
 
     h2 {
