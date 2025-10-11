@@ -20,7 +20,8 @@ A Progressive Web App (PWA) that teaches JavaScript through an interactive text-
 2. **Write Code**: Use the code editor to write your solution
 3. **Run Code**: Click "Run Code" or press Ctrl+Enter to execute your code
 4. **Navigate**: Use terminal commands like `cd north`, `cd south`, `cd east`, `cd west` to move between rooms
-5. **Get Help**: Type `help` in the terminal for available commands, or `hint` for challenge hints
+5. **View Map**: Click the "🗺️ Dungeon Map" button to see explored rooms (North=up, East=right, South=down, West=left)
+6. **Get Help**: Type `help` in the terminal for available commands, or `hint` for challenge hints
 
 ## Terminal Commands
 
@@ -36,6 +37,22 @@ A Progressive Web App (PWA) that teaches JavaScript through an interactive text-
 - `look` - Examine current room
 - `clear` - Clear the terminal
 - `whoami` - Show player info
+
+## Dungeon Map
+
+The dungeon map shows your explored rooms and follows standard orientation:
+- **North** = up on the map
+- **East** = right on the map
+- **South** = down on the map
+- **West** = left on the map
+
+**Map Legend:**
+- 🟢 **Green +** - Your current position
+- 🔵 **Blue circle** - 10m visibility radius
+- 🔴 **Red dot** - Locked door (complete challenge to unlock)
+- 🟢 **Green dot** - Unlocked door
+- ❌ **Red X** - Enemy present
+- ➕ **White +** - NPC (future feature)
 
 ## Deploy to Vercel
 
