@@ -40,6 +40,22 @@ function processCommand(commandLine) {
     terminalHistory.push(commandLine);
     historyIndex = terminalHistory.length;
     
+    // Check for newgame confirmation
+    if (command.toLowerCase() === 'newgame' && args[0] && args[0].toLowerCase() === 'confirm') {
+        if (window._newGamePending) {
+            confirmNewGame();
+            return;
+        } else {
+            appendToTerminal('No pending new game request. Type "newgame" first.', 'error');
+            return;
+        }
+    }
+    
+    // Reset newgame flag if user types something else
+    if (window._newGamePending && command.toLowerCase() !== 'newgame') {
+        window._newGamePending = false;
+    }
+    
     switch (command.toLowerCase()) {
         case 'help':
             showHelp();
@@ -110,6 +126,10 @@ function processCommand(commandLine) {
             handleLessons();
             break;
             
+        case 'newgame':
+            handleNewGame();
+            break;
+            
         case 'exit':
         case 'quit':
             appendToTerminal('There is no escape from the dungeon! (Use the browser to close)', 'error');
@@ -150,7 +170,8 @@ function showHelp() {
                 'hint            - Get a hint for the current challenge',
                 'inventory       - Show your inventory',
                 'status          - Show your health, level, and XP',
-                'lessons         - Open interactive lessons page'
+                'lessons         - Open interactive lessons page',
+                'newgame         - Reset progress and start a new game'
             ]
         },
         {
@@ -322,6 +343,27 @@ function handleLessons() {
     } else {
         window.location.href = 'lessons.html';
     }
+}
+
+function handleNewGame() {
+    appendToTerminal('⚠️  Are you sure you want to start a new game?', 'error');
+    appendToTerminal('This will reset ALL progress (game state and lessons).', 'error');
+    appendToTerminal('Type "newgame confirm" to proceed.', 'success');
+    
+    // Store flag to track confirmation
+    window._newGamePending = true;
+}
+
+function confirmNewGame() {
+    if (gameEngine && gameEngine.resetGame) {
+        gameEngine.resetGame();
+        appendToTerminal('🎮 New game started! All progress has been reset.', 'success');
+        clearTerminal();
+        initTerminal();
+    } else {
+        appendToTerminal('Failed to reset game.', 'error');
+    }
+    window._newGamePending = false;
 }
 
 function showTipsGuide() {

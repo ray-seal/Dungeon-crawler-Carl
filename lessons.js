@@ -230,10 +230,14 @@ let completedLessons = [];
 
 // Initialize lessons page
 function initLessons() {
-    // Load completed lessons from localStorage
-    const stored = localStorage.getItem('completedLessons');
-    if (stored) {
-        completedLessons = JSON.parse(stored);
+    // Load completed lessons from save manager or localStorage
+    if (window.saveManager) {
+        completedLessons = window.saveManager.getCompletedLessons();
+    } else {
+        const stored = localStorage.getItem('completedLessons');
+        if (stored) {
+            completedLessons = JSON.parse(stored);
+        }
     }
 
     // Check if we came from a specific objective
@@ -432,7 +436,12 @@ function runPracticeCode() {
             // Mark lesson as completed
             if (!completedLessons.includes(lesson.id)) {
                 completedLessons.push(lesson.id);
-                localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                // Use save manager if available, otherwise use localStorage
+                if (window.saveManager) {
+                    window.saveManager.saveLessonCompletion(lesson.id);
+                } else {
+                    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                }
                 renderLessonList();
             }
         } else {

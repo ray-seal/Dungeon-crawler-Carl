@@ -1,8 +1,28 @@
 // Main Application
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize UI components
+    if (window.uiComponents) {
+        window.uiComponents.initializeHeader();
+        window.uiComponents.initializeCodeEditor();
+    } else {
+        // Fallback if modules not loaded
+        initializeFallback();
+    }
+    
     // Initialize game and terminal
     gameEngine.initGame();
     terminal.initTerminal();
+});
+
+// Fallback initialization if modules not loaded
+function initializeFallback() {
+    // Lessons button handler
+    const lessonsButton = document.getElementById('lessonsButton');
+    if (lessonsButton) {
+        lessonsButton.addEventListener('click', () => {
+            window.location.href = 'lessons.html';
+        });
+    }
     
     // Run Code button handler
     document.getElementById('runCode').addEventListener('click', function() {
@@ -24,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('runCode').click();
         }
     });
-});
+}
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {

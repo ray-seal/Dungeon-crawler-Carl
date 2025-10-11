@@ -10,6 +10,9 @@ A Progressive Web App (PWA) that teaches JavaScript through an interactive text-
 - 🖥️ **Terminal Interface**: Use terminal commands (cd, ls, sudo, etc.) to navigate
 - 🎯 **Code Challenges**: Practice JavaScript concepts like variables, loops, functions, arrays, and objects
 - 🗺️ **Multiple Rooms**: Entrance, corridors, armory, puzzle chamber, treasure room, and boss chamber
+- 📚 **Interactive Lessons**: Dedicated lessons page with step-by-step JavaScript tutorials
+- 💾 **Auto-Save Progress**: Your game progress and lesson completion are automatically saved
+- 🔄 **Modular Architecture**: Clean, maintainable code structure with separate UI and save manager modules
 
 ## How to Play
 
@@ -27,6 +30,8 @@ A Progressive Web App (PWA) that teaches JavaScript through an interactive text-
 - `hint` - Get a hint for the current challenge
 - `inventory` - Show your items
 - `status` - Display your health, level, and XP
+- `lessons` - Open the interactive lessons page
+- `newgame` - Reset all progress and start a fresh game
 - `sudo heal` - Restore health (requires level 2+)
 - `look` - Examine current room
 - `clear` - Clear the terminal

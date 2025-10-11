@@ -160,6 +160,12 @@ function movePlayer(direction) {
     gameState.currentRoom = nextRoom;
     appendToGameplay(`<p>You move ${direction}...</p>`);
     displayRoom();
+    
+    // Auto-save progress
+    if (window.saveManager) {
+        window.saveManager.saveGameState(gameState);
+    }
+    
     return true;
 }
 
@@ -232,6 +238,11 @@ function checkChallenge(code) {
             appendToGameplay(`<p class="success">🎉 CONGRATULATIONS! You've completed the dungeon and mastered JavaScript basics!</p>`);
         }
         
+        // Auto-save progress
+        if (window.saveManager) {
+            window.saveManager.saveGameState(gameState);
+        }
+        
         return true;
     } else {
         appendToGameplay(`<p class="enemy">❌ Challenge not solved. Try again!</p>`);
@@ -260,6 +271,30 @@ function getStatus() {
 
 // Initialize game
 function initGame() {
+    // Try to load saved game state
+    if (window.saveManager && window.saveManager.hasSavedGame()) {
+        const savedState = window.saveManager.loadGameState();
+        if (savedState) {
+            // Restore saved state
+            gameState.currentRoom = savedState.currentRoom;
+            gameState.inventory = savedState.inventory || [];
+            gameState.health = savedState.health;
+            gameState.experience = savedState.experience;
+            gameState.level = savedState.level;
+            gameState.completedChallenges = savedState.completedChallenges || [];
+            gameState.unlockedDoors = savedState.unlockedDoors || [];
+            gameState.defeatedEnemies = savedState.defeatedEnemies || [];
+            
+            clearGameplay();
+            appendToGameplay(`<p class="highlight">🎮 Welcome back to Dungeon Crawler Carl!</p>`);
+            appendToGameplay(`<p class="success">💾 Progress loaded! Continuing from where you left off...</p>`);
+            appendToGameplay(`<p class="highlight">═══════════════════════════════════════════════════</p>`);
+            displayRoom();
+            return;
+        }
+    }
+    
+    // Start new game
     clearGameplay();
     appendToGameplay(`<p class="highlight">🎮 Welcome to Dungeon Crawler Carl!</p>`);
     appendToGameplay(`<p>Learn JavaScript by solving coding challenges in this text-based adventure.</p>`);
@@ -269,9 +304,35 @@ function initGame() {
     displayRoom();
 }
 
+// Reset game to initial state
+function resetGame() {
+    gameState.currentRoom = 'entrance';
+    gameState.inventory = [];
+    gameState.health = 100;
+    gameState.experience = 0;
+    gameState.level = 1;
+    gameState.completedChallenges = [];
+    gameState.unlockedDoors = [];
+    gameState.defeatedEnemies = [];
+    
+    // Clear saved data
+    if (window.saveManager) {
+        window.saveManager.clearSaveData();
+        window.saveManager.clearLessonProgress();
+    }
+    
+    // Reinitialize game display
+    clearGameplay();
+    appendToGameplay(`<p class="highlight">🎮 Starting New Game...</p>`);
+    appendToGameplay(`<p>All progress has been reset.</p>`);
+    appendToGameplay(`<p class="highlight">═══════════════════════════════════════════════════</p>`);
+    displayRoom();
+}
+
 // Export functions
 window.gameEngine = {
     initGame,
+    resetGame,
     movePlayer,
     checkChallenge,
     getHint,
