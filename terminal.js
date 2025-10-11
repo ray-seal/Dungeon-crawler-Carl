@@ -2,6 +2,54 @@
 const terminalHistory = [];
 let historyIndex = -1;
 
+// Modular help content configuration
+const HELP_CONTENT = {
+    introduction: {
+        title: "Welcome to Dungeon Crawler Carl!",
+        text: "You are Carl, a brave adventurer who has awoken in a mysterious dungeon. Your goal is to solve JavaScript coding challenges to unlock doors, defeat enemies, and escape to freedom. Use the terminal for commands and the Code Challenge box to write JavaScript code."
+    },
+    sections: [
+        {
+            title: 'Navigation Commands:',
+            commands: [
+                { name: 'cd [direction]', desc: 'Move in a direction (north, south, east, west)' },
+                { name: 'ls / dir', desc: 'List exits from current room' },
+                { name: 'pwd', desc: 'Show current room' },
+                { name: 'look', desc: 'Examine the current room' }
+            ]
+        },
+        {
+            title: 'Game Commands:',
+            commands: [
+                { name: 'hint', desc: 'Get a hint for the current challenge' },
+                { name: 'inventory', desc: 'Show your inventory' },
+                { name: 'status', desc: 'Show your health, level, and XP' },
+                { name: 'lessons', desc: 'Open interactive lessons page' },
+                { name: 'newgame', desc: 'Reset progress and start a new game' }
+            ]
+        },
+        {
+            title: 'System Commands:',
+            commands: [
+                { name: 'sudo [command]', desc: 'Execute with elevated privileges (special actions)' },
+                { name: 'help', desc: 'Show this help message' },
+                { name: 'man [command]', desc: 'Show manual for a command' },
+                { name: 'clear', desc: 'Clear the terminal' },
+                { name: 'history', desc: 'Show command history' },
+                { name: 'whoami', desc: 'Display player info' },
+                { name: 'echo [text]', desc: 'Print text to terminal' },
+                { name: 'cat [file]', desc: 'Read a file' }
+            ]
+        }
+    ],
+    tips: [
+        "Write JavaScript code in the Code Challenge box to solve puzzles!",
+        "Use the terminal to navigate through the dungeon and check your status.",
+        "Type 'hint' if you're stuck on a challenge.",
+        "Your progress is automatically saved as you play."
+    ]
+};
+
 function appendToTerminal(text, type = 'output') {
     const terminal = document.getElementById('terminal');
     const line = document.createElement('div');
@@ -107,7 +155,7 @@ function processCommand(commandLine) {
             break;
             
         case 'whoami':
-            appendToTerminal(`You are a brave adventurer learning JavaScript! Level ${gameEngine.gameState.level}`);
+            appendToTerminal(`You are ${gameEngine.gameState.playerName}, a brave adventurer learning JavaScript! Level ${gameEngine.gameState.level}`);
             break;
             
         case 'history':
@@ -145,70 +193,131 @@ function processCommand(commandLine) {
 }
 
 function showHelp() {
-    // Build help text using DOM manipulation to avoid innerHTML
+    // Open the help modal
+    openHelpModal();
+    
+    // Also log to terminal that help was opened
+    appendToTerminal('Opening help guide...', 'success');
+}
+
+function openHelpModal() {
+    const modal = document.getElementById('helpModal');
+    const helpBody = document.getElementById('helpBody');
+    
+    if (!modal || !helpBody) return;
+    
+    // Clear previous content
+    helpBody.innerHTML = '';
+    
+    // Build help content
     const container = document.createElement('div');
     
-    const titleDiv = document.createElement('div');
-    titleDiv.style.color = '#00ffff';
-    titleDiv.textContent = 'Available Commands:';
-    container.appendChild(titleDiv);
-    container.appendChild(document.createElement('br'));
+    // Add introduction
+    const introDiv = document.createElement('div');
+    introDiv.className = 'help-intro';
+    const introTitle = document.createElement('strong');
+    introTitle.textContent = HELP_CONTENT.introduction.title;
+    introTitle.style.display = 'block';
+    introTitle.style.marginBottom = '10px';
+    introDiv.appendChild(introTitle);
+    const introText = document.createElement('p');
+    introText.textContent = HELP_CONTENT.introduction.text;
+    introText.style.margin = '0';
+    introDiv.appendChild(introText);
+    container.appendChild(introDiv);
     
-    const sections = [
-        {
-            title: 'Navigation:',
-            commands: [
-                'cd [direction]  - Move in a direction (north, south, east, west)',
-                'ls / dir        - List exits from current room',
-                'pwd             - Show current room',
-                'look            - Examine the current room'
-            ]
-        },
-        {
-            title: 'Game Commands:',
-            commands: [
-                'hint            - Get a hint for the current challenge',
-                'inventory       - Show your inventory',
-                'status          - Show your health, level, and XP',
-                'lessons         - Open interactive lessons page',
-                'newgame         - Reset progress and start a new game'
-            ]
-        },
-        {
-            title: 'System Commands:',
-            commands: [
-                'sudo [command]  - Execute with elevated privileges (special actions)',
-                'help            - Show this help message',
-                'man [command]   - Show manual for a command',
-                'clear           - Clear the terminal',
-                'history         - Show command history',
-                'whoami          - Display player info',
-                'echo [text]     - Print text to terminal',
-                'cat [file]      - Read a file'
-            ]
-        }
-    ];
-    
-    sections.forEach(section => {
-        const strong = document.createElement('strong');
-        strong.textContent = section.title;
-        container.appendChild(strong);
-        container.appendChild(document.createTextNode('\n'));
+    // Add command sections
+    HELP_CONTENT.sections.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'help-section';
+        
+        const sectionTitle = document.createElement('div');
+        sectionTitle.className = 'help-section-title';
+        sectionTitle.textContent = section.title;
+        sectionDiv.appendChild(sectionTitle);
         
         section.commands.forEach(cmd => {
-            container.appendChild(document.createTextNode('  ' + cmd + '\n'));
+            const cmdDiv = document.createElement('div');
+            cmdDiv.className = 'help-command';
+            
+            const cmdName = document.createElement('span');
+            cmdName.className = 'help-command-name';
+            cmdName.textContent = cmd.name;
+            
+            const separator = document.createTextNode(' - ');
+            
+            const cmdDesc = document.createElement('span');
+            cmdDesc.className = 'help-command-desc';
+            cmdDesc.textContent = cmd.desc;
+            
+            cmdDiv.appendChild(cmdName);
+            cmdDiv.appendChild(separator);
+            cmdDiv.appendChild(cmdDesc);
+            sectionDiv.appendChild(cmdDiv);
         });
-        container.appendChild(document.createElement('br'));
+        
+        container.appendChild(sectionDiv);
     });
     
-    const tipDiv = document.createElement('div');
-    tipDiv.style.color = '#ffff00';
-    tipDiv.textContent = 'Tip: Write JavaScript code in the Code Challenge box to solve puzzles!';
-    container.appendChild(tipDiv);
+    // Add tips
+    const tipsDiv = document.createElement('div');
+    tipsDiv.className = 'help-tip';
+    const tipsTitle = document.createElement('strong');
+    tipsTitle.textContent = '💡 Tips:';
+    tipsTitle.style.display = 'block';
+    tipsTitle.style.marginBottom = '8px';
+    tipsDiv.appendChild(tipsTitle);
     
-    const terminal = document.getElementById('terminal');
-    terminal.appendChild(container);
-    terminal.scrollTop = terminal.scrollHeight;
+    HELP_CONTENT.tips.forEach(tip => {
+        const tipP = document.createElement('p');
+        tipP.textContent = '• ' + tip;
+        tipP.style.margin = '5px 0';
+        tipsDiv.appendChild(tipP);
+    });
+    
+    container.appendChild(tipsDiv);
+    
+    // Add to help body
+    helpBody.appendChild(container);
+    
+    // Show modal
+    modal.style.display = 'flex';
+}
+
+function closeHelpModal() {
+    const modal = document.getElementById('helpModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Initialize help modal event listeners
+function initHelpModal() {
+    const closeButton = document.getElementById('closeHelp');
+    const modal = document.getElementById('helpModal');
+    
+    if (closeButton) {
+        closeButton.addEventListener('click', closeHelpModal);
+    }
+    
+    // Close modal when clicking outside
+    if (modal) {
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            const modal = document.getElementById('helpModal');
+            if (modal && modal.style.display === 'flex') {
+                closeHelpModal();
+            }
+        }
+    });
 }
 
 function handleCd(direction) {
@@ -446,6 +555,9 @@ function initTerminal() {
     appendToTerminal('Dungeon Crawler Carl Terminal v1.0', 'success');
     appendToTerminal('Type "help" for available commands.');
     appendToTerminal('═══════════════════════════════════════════════════');
+    
+    // Initialize help modal
+    initHelpModal();
 }
 
 // Event listeners for terminal input
