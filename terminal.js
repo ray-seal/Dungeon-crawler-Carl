@@ -106,6 +106,10 @@ function processCommand(commandLine) {
             handleCat(args[0]);
             break;
             
+        case 'lessons':
+            handleLessons();
+            break;
+            
         case 'exit':
         case 'quit':
             appendToTerminal('There is no escape from the dungeon! (Use the browser to close)', 'error');
@@ -145,7 +149,8 @@ function showHelp() {
             commands: [
                 'hint            - Get a hint for the current challenge',
                 'inventory       - Show your inventory',
-                'status          - Show your health, level, and XP'
+                'status          - Show your health, level, and XP',
+                'lessons         - Open interactive lessons page'
             ]
         },
         {
@@ -271,7 +276,8 @@ function showManual(command) {
         'ls': 'ls - list directory contents (show exits)\nUsage: ls',
         'sudo': 'sudo - execute command with elevated privileges\nUsage: sudo [heal|reveal|unlock|tips]',
         'hint': 'hint - display a hint for the current challenge\nUsage: hint',
-        'help': 'help - display available commands\nUsage: help'
+        'help': 'help - display available commands\nUsage: help',
+        'lessons': 'lessons - open interactive lessons page to learn JavaScript concepts\nUsage: lessons'
     };
     
     appendToTerminal(manuals[command.toLowerCase()] || `No manual entry for ${command}`);
@@ -301,6 +307,21 @@ function handleCat(filename) {
     };
     
     appendToTerminal(files[filename] || `cat: ${filename}: No such file or directory`, files[filename] ? undefined : 'error');
+}
+
+function handleLessons() {
+    const room = gameEngine.rooms[gameEngine.gameState.currentRoom];
+    const currentObjective = room.challenge ? room.challenge.id : null;
+    
+    appendToTerminal('📚 Opening lessons page...', 'success');
+    appendToTerminal('Learn the concepts you need to solve challenges!');
+    
+    // Navigate to lessons page with current objective
+    if (currentObjective) {
+        window.location.href = `lessons.html?objective=${currentObjective}`;
+    } else {
+        window.location.href = 'lessons.html';
+    }
 }
 
 function showTipsGuide() {

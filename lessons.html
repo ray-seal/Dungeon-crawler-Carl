@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Learn JavaScript coding concepts step by step">
+    <title>Lessons - Dungeon Crawler Carl</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="lessons.css">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+</head>
+<body>
+    <div class="lessons-container">
+        <!-- Title Bar -->
+        <header class="title-bar">
+            <h1>📚 Dungeon Crawler Carl - Lessons</h1>
+            <button id="backToGame" class="btn-back">← Back to Game</button>
+        </header>
+
+        <!-- Lesson Content -->
+        <section class="lesson-content">
+            <div id="lessonTitle" class="lesson-title"></div>
+            
+            <!-- Explanation Section -->
+            <div class="lesson-section">
+                <h2>📖 What You'll Learn</h2>
+                <div id="lessonExplanation" class="lesson-explanation"></div>
+            </div>
+
+            <!-- Fill in the Blanks Section -->
+            <div class="lesson-section">
+                <h2>✏️ Fill in the Blanks</h2>
+                <div id="fillInBlanks" class="fill-in-blanks"></div>
+                <button id="checkBlanks" class="btn-check">Check Answer</button>
+                <div id="blanksResult" class="result-message"></div>
+            </div>
+
+            <!-- Your Turn Section -->
+            <div class="lesson-section">
+                <h2>🎯 Your Turn - Practice</h2>
+                <div id="practicePrompt" class="practice-prompt"></div>
+                <textarea id="practiceEditor" class="practice-editor" placeholder="// Write your JavaScript code here..."></textarea>
+                <button id="runPractice" class="btn-run">Run Code ▶</button>
+                <div id="practiceOutput" class="practice-output"></div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="lesson-navigation">
+                <button id="prevLesson" class="btn-nav">← Previous Lesson</button>
+                <button id="nextLesson" class="btn-nav">Next Lesson →</button>
+            </div>
+        </section>
+
+        <!-- Lesson List Sidebar -->
+        <aside class="lesson-sidebar">
+            <h2>Available Lessons</h2>
+            <div id="lessonList" class="lesson-list"></div>
+        </aside>
+    </div>
+
+    <script src="lessons.js"></script>
+</body>
+</html>
