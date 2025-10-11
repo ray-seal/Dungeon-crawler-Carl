@@ -1,34 +1,11 @@
 // Lesson Selection Page JavaScript
-// This file now redirects to lesson-select.js for backward compatibility
-// Or handles the lesson selection display
+// Displays all available lessons in a grid format
 
 const lessons = window.lessonData || [];
 let completedLessons = [];
 
 // Initialize lesson selection page
-function initLessons() {
-    // Check if there's a specific objective or lesson ID in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const objective = urlParams.get('objective');
-    const lessonId = urlParams.get('id');
-    
-    // If there's a specific lesson requested, redirect to lesson-view
-    if (objective || lessonId) {
-        if (lessonId) {
-            window.location.href = `lesson-view.html?id=${lessonId}`;
-        } else if (objective) {
-            // Find lesson by objective
-            const lesson = lessons.find(l => l.objective === objective);
-            if (lesson) {
-                window.location.href = `lesson-view.html?id=${lesson.id}`;
-            } else {
-                window.location.href = 'lesson-select.html';
-            }
-        }
-        return;
-    }
-    
-    // Otherwise, show the lesson selection page
+function initLessonSelect() {
     // Load completed lessons from save manager or localStorage
     if (window.saveManager) {
         completedLessons = window.saveManager.getCompletedLessons();
@@ -46,8 +23,6 @@ function initLessons() {
 // Render the lesson grid
 function renderLessonGrid() {
     const gridContainer = document.getElementById('lessonGrid');
-    if (!gridContainer) return;
-    
     gridContainer.innerHTML = '';
 
     // Group lessons by level
@@ -171,13 +146,10 @@ function getShortDescription(lesson) {
 // Setup event listeners
 function setupEventListeners() {
     // Back to game button
-    const backButton = document.getElementById('backToGame');
-    if (backButton) {
-        backButton.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
-    }
+    document.getElementById('backToGame').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
 }
 
 // Initialize when page loads
-document.addEventListener('DOMContentLoaded', initLessons);
+document.addEventListener('DOMContentLoaded', initLessonSelect);
