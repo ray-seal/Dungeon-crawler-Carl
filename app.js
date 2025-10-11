@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeFallback();
     }
     
+    // Initialize map
+    if (window.dungeonMap) {
+        window.dungeonMap.initializeMap();
+    }
+    
     // Initialize game and terminal
     gameEngine.initGame();
     terminal.initTerminal();

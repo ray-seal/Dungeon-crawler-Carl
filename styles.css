@@ -68,6 +68,38 @@ body {
     transform: translateY(0);
 }
 
+/* Map Button Container */
+.map-button-container {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.btn-map {
+    padding: 10px 20px;
+    background-color: #00ffff;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 300px;
+}
+
+.btn-map:hover {
+    background-color: #00cccc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 255, 255, 0.3);
+}
+
+.btn-map:active {
+    transform: translateY(0);
+}
+
 /* Section Headers */
 h2 {
     font-size: 1rem;
@@ -305,4 +337,182 @@ h2 {
 
 .cursor {
     animation: blink 1s infinite;
+}
+
+/* Map Modal */
+.map-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+}
+
+.map-modal-content {
+    background-color: #0a0a0a;
+    border: 3px solid #00ff00;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+}
+
+.map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.map-header h2 {
+    color: #00ffff;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.btn-close-map {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close-map:hover {
+    background-color: #cc0000;
+    box-shadow: 0 0 10px #ff0000;
+}
+
+#mapCanvas {
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    background-color: #000000;
+    margin-bottom: 15px;
+}
+
+.map-legend {
+    background-color: #111;
+    border: 2px solid #00ff00;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.map-legend h3 {
+    color: #00ffff;
+    font-size: 1rem;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.legend-symbol {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.legend-symbol.player-symbol {
+    color: #00ff00;
+    font-size: 1.2rem;
+}
+
+.legend-symbol.enemy-symbol {
+    color: #ff0000;
+    font-size: 1.2rem;
+}
+
+.legend-symbol.npc-symbol {
+    color: #ffffff;
+    font-size: 1.2rem;
+}
+
+.legend-symbol.door-locked {
+    color: #ff0000;
+    font-size: 1.5rem;
+}
+
+.legend-symbol.door-unlocked {
+    color: #00ff00;
+    font-size: 1.5rem;
+}
+
+/* Mobile Responsive for Map */
+@media (max-width: 768px) {
+    .map-modal-content {
+        padding: 15px;
+        max-width: 95%;
+        max-height: 95%;
+    }
+    
+    .map-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    #mapCanvas {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+    }
+    
+    .legend-items {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .legend-item {
+        font-size: 0.85rem;
+    }
+    
+    .map-legend {
+        padding: 8px 12px;
+    }
+    
+    .map-legend h3 {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+}
+
+/* Portrait/Mobile specific adjustments */
+@media (max-width: 768px) and (orientation: portrait) {
+    #mapCanvas {
+        width: 100%;
+        height: 300px;
+    }
+    
+    .btn-map {
+        font-size: 0.95rem;
+        padding: 10px 15px;
+    }
 }

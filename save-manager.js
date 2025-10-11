@@ -13,7 +13,9 @@ function saveGameState(gameState) {
                 level: gameState.level,
                 completedChallenges: gameState.completedChallenges,
                 unlockedDoors: gameState.unlockedDoors,
-                defeatedEnemies: gameState.defeatedEnemies
+                defeatedEnemies: gameState.defeatedEnemies,
+                exploredRooms: gameState.exploredRooms,
+                visitedRooms: gameState.visitedRooms
             },
             timestamp: new Date().toISOString()
         };
