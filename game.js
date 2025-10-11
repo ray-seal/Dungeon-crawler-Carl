@@ -37,13 +37,102 @@ const rooms = {
             hint: 'Use: let key = ...',
             solution: (output, code) => code.includes('key') && code.includes('42')
         },
-        exits: { south: 'entrance', east: 'armory', north: 'treasure_room' },
+        exits: { south: 'entrance', east: 'data_chamber', north: 'treasure_room' },
         locked: { east: 'variable_door' }
+    },
+    data_chamber: {
+        name: 'Chamber of Types',
+        description: 'Strange symbols glow on the walls representing different data types. You must understand them to proceed.',
+        coordinates: { x: 1, y: 1 },
+        challenge: {
+            id: 'data_types',
+            description: 'Create three variables: "health" (number: 100), "name" (string: any name), and "alive" (boolean: true). Print all three.',
+            hint: 'Remember: numbers have no quotes, strings need quotes, booleans are true/false',
+            solution: (output, code) => {
+                return code.includes('health') && 
+                       code.includes('name') && 
+                       code.includes('alive') &&
+                       code.includes('100') &&
+                       code.includes('true') &&
+                       (code.includes('"') || code.includes("'"));
+            }
+        },
+        exits: { west: 'corridor', east: 'calculation_hall' },
+        locked: { east: 'data_types' }
+    },
+    calculation_hall: {
+        name: 'Hall of Calculations',
+        description: 'Ancient machinery fills this hall. Mathematical symbols are etched everywhere.',
+        coordinates: { x: 2, y: 1 },
+        challenge: {
+            id: 'math_operators',
+            description: 'Calculate the total damage: (10 + 5) * 2 and store it in variable "totalDamage". Print the result.',
+            hint: 'Use parentheses for order of operations: (10 + 5) * 2',
+            solution: (output, code) => {
+                return code.includes('totalDamage') && 
+                       (output.includes('30') || code.includes('(10 + 5) * 2') || code.includes('15 * 2'));
+            }
+        },
+        exits: { west: 'data_chamber', north: 'string_shrine' },
+        locked: { north: 'math_operators' }
+    },
+    string_shrine: {
+        name: 'Shrine of Words',
+        description: 'Scrolls and books float in the air. Ancient text manipulation magic permeates this place.',
+        coordinates: { x: 2, y: 2 },
+        challenge: {
+            id: 'string_methods',
+            description: 'Create variable "weapon" with value "sword". Convert it to uppercase using .toUpperCase() and print it.',
+            hint: 'Use weapon.toUpperCase() to convert to uppercase',
+            solution: (output, code) => {
+                return code.includes('weapon') && 
+                       code.includes('sword') &&
+                       code.includes('toUpperCase') &&
+                       output.includes('SWORD');
+            }
+        },
+        exits: { south: 'calculation_hall', west: 'decision_chamber' },
+        locked: { west: 'string_methods' }
+    },
+    decision_chamber: {
+        name: 'Chamber of Decisions',
+        description: 'Two paths diverge before you. Only those who can make logical decisions may choose wisely.',
+        coordinates: { x: 1, y: 2 },
+        challenge: {
+            id: 'conditionals',
+            description: 'Create variable "score" with value 85. Use if/else: print "Pass" if score >= 60, else print "Fail".',
+            hint: 'if (score >= 60) { console.log("Pass"); } else { console.log("Fail"); }',
+            solution: (output, code) => {
+                return code.includes('score') && 
+                       code.includes('if') &&
+                       code.includes('85') &&
+                       output.includes('Pass');
+            }
+        },
+        exits: { east: 'string_shrine', west: 'comparison_cave', south: 'armory' },
+        locked: { west: 'comparison_cave' }
+    },
+    comparison_cave: {
+        name: 'Cave of Comparisons',
+        description: 'A mystical cave where values are weighed and compared. Understanding comparison is key.',
+        coordinates: { x: 0, y: 2 },
+        challenge: {
+            id: 'comparisons',
+            description: 'Create "playerLevel" (5) and "enemyLevel" (3). Print "Victory!" if playerLevel is greater than enemyLevel.',
+            hint: 'Use > to compare: if (playerLevel > enemyLevel)',
+            solution: (output, code) => {
+                return code.includes('playerLevel') && 
+                       code.includes('enemyLevel') &&
+                       code.includes('>') &&
+                       output.includes('Victory!');
+            }
+        },
+        exits: { east: 'decision_chamber', north: 'treasure_room' }
     },
     armory: {
         name: 'Armory',
         description: 'Weapons and armor line the walls. A skeleton warrior guards a chest.',
-        coordinates: { x: 1, y: 1 },
+        coordinates: { x: 1, y: 3 },
         enemy: {
             name: 'Skeleton Warrior',
             health: 50,
@@ -58,13 +147,13 @@ const rooms = {
                 return attacks === 5;
             }
         },
-        exits: { west: 'corridor', north: 'puzzle_room' },
-        locked: { north: 'loop_attack' }
+        exits: { north: 'decision_chamber', east: 'puzzle_room' },
+        locked: { east: 'loop_attack' }
     },
     puzzle_room: {
         name: 'Puzzle Chamber',
         description: 'Ancient runes cover the walls. A magical barrier blocks your path.',
-        coordinates: { x: 1, y: 2 },
+        coordinates: { x: 2, y: 3 },
         challenge: {
             id: 'array_puzzle',
             description: 'Create an array with the numbers [1, 2, 3, 4, 5] and calculate their sum.',
@@ -74,13 +163,13 @@ const rooms = {
                        (output.includes('15') || code.includes('reduce'));
             }
         },
-        exits: { south: 'armory', east: 'boss_room' },
-        locked: { east: 'array_puzzle' }
+        exits: { west: 'armory', north: 'boss_antechamber' },
+        locked: { north: 'array_puzzle' }
     },
     treasure_room: {
         name: 'Treasure Room',
-        description: 'Gold and jewels sparkle in the dim light. You find a mysterious scroll.',
-        coordinates: { x: 0, y: 2 },
+        description: 'Gold and jewels sparkle in the dim light. You find a mysterious scroll about functions.',
+        coordinates: { x: 0, y: 3 },
         challenge: {
             id: 'function_treasure',
             description: 'Write a function called "openChest" that returns "Treasure found!"',
@@ -91,12 +180,31 @@ const rooms = {
                        (output.includes('Treasure found!') || code.includes('return'));
             }
         },
-        exits: { south: 'corridor' }
+        exits: { south: 'comparison_cave' }
+    },
+    boss_antechamber: {
+        name: 'Antechamber',
+        description: 'You stand before massive golden doors. Heat radiates from beyond. This is your final test before the boss.',
+        coordinates: { x: 2, y: 4 },
+        challenge: {
+            id: 'object_practice',
+            description: 'Create an object "hero" with properties: name (string), health (100), and level (1). Print the hero object.',
+            hint: 'const hero = { name: "...", health: 100, level: 1 };',
+            solution: (output, code) => {
+                return code.includes('hero') && 
+                       code.includes('name') && 
+                       code.includes('health') &&
+                       code.includes('level') &&
+                       code.includes('100');
+            }
+        },
+        exits: { south: 'puzzle_room', north: 'boss_room' },
+        locked: { north: 'object_practice' }
     },
     boss_room: {
-        name: 'Boss Chamber',
-        description: 'A massive dragon sleeps on a pile of gold. This is the final challenge!',
-        coordinates: { x: 2, y: 2 },
+        name: 'Dragon\'s Lair',
+        description: 'A massive ancient dragon sleeps on a pile of gold. The air is thick with heat and danger. This is your final challenge!',
+        coordinates: { x: 2, y: 5 },
         enemy: {
             name: 'Ancient Dragon',
             health: 100,
@@ -104,15 +212,54 @@ const rooms = {
         },
         challenge: {
             id: 'dragon_defeat',
-            description: 'Create an object representing the dragon with properties: name, health, and defeated. Set defeated to true.',
-            hint: 'const dragon = { name: "...", health: 0, defeated: true }',
+            description: `Write a complete battle script that simulates fighting the dragon! Your script must:
+            
+1. Use console.log() to output the battle progress
+2. Create variables for dragonHealth (100) and playerHealth (100)
+3. Use a loop (for or while) for multiple attack rounds (at least 3 rounds)
+4. Each round: player attacks for 25-35 damage (use random or fixed)
+5. Use if/else to check if dragon dodges (when dragonHealth > 50, 30% chance to dodge)
+6. If dragon doesn't dodge, reduce dragonHealth and print "Dragon hit! Dragon health: X"
+7. Dragon counter-attacks for 15-20 damage if still alive
+8. Use if/else to check if player dodges (if playerHealth > 60, player dodges 40% of the time)
+9. Print remaining health after each round
+10. End when dragonHealth <= 0, print "Victory! Dragon defeated!"
+
+The battle should play out dynamically in the console!`,
+            hint: `Example structure:
+let dragonHealth = 100;
+let playerHealth = 100;
+for (let round = 1; round <= 5; round++) {
+    console.log("Round " + round);
+    // Player attacks
+    // Check if dragon dodges
+    // Dragon counter-attacks
+    // Check if player dodges
+    // Print health status
+    // Check if dragon is defeated
+}`,
             solution: (output, code) => {
-                return code.includes('dragon') && 
-                       code.includes('defeated') && 
-                       code.includes('true');
+                // Check for required elements
+                const hasLoop = code.includes('for') || code.includes('while');
+                const hasIfElse = code.includes('if') && (code.includes('else') || code.match(/if.*if/));
+                const hasConsoleLog = (code.match(/console\.log/g) || []).length >= 3;
+                const hasDragonHealth = code.includes('dragonHealth') || code.includes('dragon_health') || code.includes('dragon');
+                const hasPlayerHealth = code.includes('playerHealth') || code.includes('player_health') || code.includes('player');
+                const hasVictoryMessage = output.toLowerCase().includes('victory') || 
+                                         output.toLowerCase().includes('defeat') || 
+                                         output.toLowerCase().includes('win');
+                const hasHealthOutput = output.match(/health|Health|HP|hp/gi) && output.match(/\d+/g);
+                const hasRounds = output.split('\n').length >= 5; // At least 5 lines of output
+                
+                // Check if battle simulation is reasonable
+                const hasAttackLogic = code.includes('-') || code.includes('--') || code.includes('-=');
+                
+                return hasLoop && hasIfElse && hasConsoleLog && hasDragonHealth && 
+                       hasPlayerHealth && hasVictoryMessage && hasHealthOutput && 
+                       hasRounds && hasAttackLogic;
             }
         },
-        exits: { west: 'puzzle_room' }
+        exits: { south: 'boss_antechamber' }
     }
 };
 

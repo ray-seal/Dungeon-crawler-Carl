@@ -1309,7 +1309,7 @@ console.log(add(5, 3));    // Prints: 8</code></pre>
         id: 'objects',
         level: 'advanced',
         title: 'Lesson 14: Objects - Structured Data',
-        objective: 'dragon_defeat',
+        objective: 'object_practice',
         explanation: `
             <p>Objects let you group related data together using key-value pairs! 🗝️</p>
             <p>They're perfect for representing real-world things with multiple properties.</p>
@@ -1406,6 +1406,153 @@ dragon.health = 0;</code></pre>
                     { answer: 'score', caseSensitive: true }
                 ],
                 explanation: 'Use dot notation to update: player.score = 100;'
+            }
+        ]
+    },
+    {
+        id: 'dragon_battle',
+        level: 'advanced',
+        title: 'Lesson 15: Final Boss Battle - Putting It All Together',
+        objective: 'dragon_defeat',
+        explanation: `
+            <p>🐉 It's time for your final challenge! You'll write a complete battle simulation script that combines everything you've learned!</p>
+            <p>Your script will simulate an epic battle between you and the Ancient Dragon, using:</p>
+            <ul>
+                <li><strong>Variables:</strong> To track health and damage</li>
+                <li><strong>Loops:</strong> To simulate multiple rounds of combat</li>
+                <li><strong>Conditionals (if/else):</strong> To determine hits, dodges, and victory</li>
+                <li><strong>console.log():</strong> To narrate the battle as it unfolds</li>
+            </ul>
+            <p><strong>Example Battle Script Structure:</strong></p>
+            <pre><code>// Initialize health
+let dragonHealth = 100;
+let playerHealth = 100;
+
+// Battle loop - fight for 5 rounds or until someone is defeated
+for (let round = 1; round <= 5; round++) {
+    console.log("=== Round " + round + " ===");
+    
+    // Player attacks
+    let playerDamage = 30;
+    
+    // Check if dragon dodges (30% chance if health > 50)
+    if (dragonHealth > 50 && Math.random() < 0.3) {
+        console.log("Dragon dodged your attack!");
+    } else {
+        dragonHealth = dragonHealth - playerDamage;
+        console.log("You hit the dragon for " + playerDamage + " damage!");
+        console.log("Dragon health: " + dragonHealth);
+    }
+    
+    // Check if dragon is defeated
+    if (dragonHealth <= 0) {
+        console.log("Victory! You defeated the Ancient Dragon!");
+        break;  // Exit the loop
+    }
+    
+    // Dragon counter-attacks
+    let dragonDamage = 18;
+    
+    // Check if player dodges (40% chance if health > 60)
+    if (playerHealth > 60 && Math.random() < 0.4) {
+        console.log("You dodged the dragon's attack!");
+    } else {
+        playerHealth = playerHealth - dragonDamage;
+        console.log("Dragon hits you for " + dragonDamage + " damage!");
+        console.log("Your health: " + playerHealth);
+    }
+    
+    // Check if player is defeated
+    if (playerHealth <= 0) {
+        console.log("Defeat! You have been defeated by the dragon...");
+        break;
+    }
+}
+
+console.log("=== Battle Complete ===");</code></pre>
+            <p><strong>Tips for your battle script:</strong></p>
+            <ul>
+                <li>Start both characters with 100 health</li>
+                <li>Use a for loop or while loop for multiple rounds</li>
+                <li>Player damage should be 25-35, dragon damage 15-20</li>
+                <li>Use if/else to check dodge conditions</li>
+                <li>Print health status after each action</li>
+                <li>Check for victory/defeat conditions</li>
+                <li>Use break to exit the loop when battle ends</li>
+            </ul>
+            <p>Remember: The goal is to demonstrate that you understand how all these concepts work together!</p>
+        `,
+        questions: [
+            {
+                id: 1,
+                type: 'multiple-choice',
+                question: 'What JavaScript concept is best for repeating attack rounds?',
+                options: ['Variables', 'Loops', 'Objects', 'Functions'],
+                correctAnswer: 1,
+                explanation: 'Loops (for or while) are perfect for repeating actions like combat rounds.'
+            },
+            {
+                id: 2,
+                type: 'multiple-choice',
+                question: 'What operator is used to reduce health when taking damage?',
+                options: ['+=', '-=', '*=', '=='],
+                correctAnswer: 1,
+                explanation: '-= subtracts and assigns: health -= 20 is the same as health = health - 20'
+            },
+            {
+                id: 3,
+                type: 'fill-in-blank',
+                question: 'Check if dragon is defeated:',
+                template: 'if (dragonHealth ___ 0) { console.log("Victory!"); }',
+                blanks: [
+                    { answer: '<=', alternatives: ['<', '===', '=='], caseSensitive: true }
+                ],
+                explanation: 'Use <= to check if health is less than or equal to 0.'
+            },
+            {
+                id: 4,
+                type: 'multiple-choice',
+                question: 'What keyword exits a loop early?',
+                options: ['exit', 'stop', 'break', 'end'],
+                correctAnswer: 2,
+                explanation: 'break exits the current loop immediately.'
+            },
+            {
+                id: 5,
+                type: 'code',
+                question: 'Write a simple 3-round battle: Start with enemyHealth=60. Each round, deal 20 damage and print health. Print "Won!" when health <= 0.',
+                solution: (output, code) => {
+                    return code.includes('for') || code.includes('while') &&
+                           code.includes('enemyHealth') &&
+                           code.includes('20') &&
+                           (output.toLowerCase().includes('won') || output.toLowerCase().includes('victory'));
+                },
+                explanation: 'Use a loop to repeat attacks, subtract damage each round, check for victory.'
+            },
+            {
+                id: 6,
+                type: 'multiple-choice',
+                question: 'In a battle script, when should you check if health <= 0?',
+                options: [
+                    'Before the battle starts',
+                    'After each attack',
+                    'Only at the end',
+                    'Never'
+                ],
+                correctAnswer: 1,
+                explanation: 'Check after each attack to determine if the battle should end.'
+            },
+            {
+                id: 7,
+                type: 'code',
+                question: 'Create a dodge mechanic: if playerHealth > 50, print "Dodged!", else reduce health by 15 and print new health.',
+                solution: (output, code) => {
+                    return code.includes('if') &&
+                           code.includes('else') &&
+                           code.includes('playerHealth') &&
+                           (output.toLowerCase().includes('dodge') || output.includes('15'));
+                },
+                explanation: 'Use if/else to check condition and take different actions based on health.'
             }
         ]
     },
