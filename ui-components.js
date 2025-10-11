@@ -10,14 +10,9 @@ function initializeHeader() {
 
 // Navigate to lessons page
 function navigateToLessons() {
-    const room = window.gameEngine ? window.gameEngine.rooms[window.gameEngine.gameState.currentRoom] : null;
-    const currentObjective = room && room.challenge ? room.challenge.id : null;
-    
-    if (currentObjective) {
-        window.location.href = `lessons.html?objective=${currentObjective}`;
-    } else {
-        window.location.href = 'lessons.html';
-    }
+    // Always navigate to the lesson selection page
+    // This provides instant navigation without complex objective handling
+    window.location.href = 'lesson-select.html';
 }
 
 // Code Editor Component - Initialize code editor
