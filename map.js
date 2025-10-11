@@ -1,4 +1,5 @@
 // Dungeon Map Module - Handles the dungeon map visualization
+// Map Orientation: North=up, East=right, South=down, West=left
 
 // Map Configuration
 const MAP_CONFIG = {
@@ -96,9 +97,11 @@ function calculateMapBounds(rooms) {
 }
 
 // Convert room coordinates to canvas coordinates
+// Standard map orientation: North=up(-Y), South=down(+Y), East=right(+X), West=left(-X)
 function roomToCanvas(roomX, roomY, centerX, centerY, bounds) {
     const offsetX = (roomX - (bounds.minX + bounds.maxX) / 2) * MAP_CONFIG.roomSize;
-    const offsetY = (roomY - (bounds.minY + bounds.maxY) / 2) * MAP_CONFIG.roomSize;
+    // Negate Y offset so that north (lower Y values) appears at top of canvas
+    const offsetY = -((roomY - (bounds.minY + bounds.maxY) / 2) * MAP_CONFIG.roomSize);
     
     return {
         x: centerX + offsetX,
