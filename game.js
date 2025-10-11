@@ -7,7 +7,9 @@ const gameState = {
     level: 1,
     completedChallenges: [],
     unlockedDoors: [],
-    defeatedEnemies: []
+    defeatedEnemies: [],
+    exploredRooms: ['entrance'],
+    visitedRooms: ['entrance']
 };
 
 // Room Definitions
@@ -15,6 +17,7 @@ const rooms = {
     entrance: {
         name: 'Dungeon Entrance',
         description: 'You stand at the entrance of a dark dungeon. The air is cold and musty. A door lies ahead.',
+        coordinates: { x: 0, y: 0 },
         challenge: {
             id: 'hello_world',
             description: 'Print "Hello, Dungeon!" to the console to unlock the door.',
@@ -27,6 +30,7 @@ const rooms = {
     corridor: {
         name: 'Dark Corridor',
         description: 'A long corridor stretches before you. Torches flicker on the walls. There are paths to the east and north.',
+        coordinates: { x: 0, y: 1 },
         challenge: {
             id: 'variable_door',
             description: 'Create a variable called "key" with the value 42 to proceed.',
@@ -39,6 +43,7 @@ const rooms = {
     armory: {
         name: 'Armory',
         description: 'Weapons and armor line the walls. A skeleton warrior guards a chest.',
+        coordinates: { x: 1, y: 1 },
         enemy: {
             name: 'Skeleton Warrior',
             health: 50,
@@ -59,6 +64,7 @@ const rooms = {
     puzzle_room: {
         name: 'Puzzle Chamber',
         description: 'Ancient runes cover the walls. A magical barrier blocks your path.',
+        coordinates: { x: 1, y: 2 },
         challenge: {
             id: 'array_puzzle',
             description: 'Create an array with the numbers [1, 2, 3, 4, 5] and calculate their sum.',
@@ -74,6 +80,7 @@ const rooms = {
     treasure_room: {
         name: 'Treasure Room',
         description: 'Gold and jewels sparkle in the dim light. You find a mysterious scroll.',
+        coordinates: { x: 0, y: 2 },
         challenge: {
             id: 'function_treasure',
             description: 'Write a function called "openChest" that returns "Treasure found!"',
@@ -89,6 +96,7 @@ const rooms = {
     boss_room: {
         name: 'Boss Chamber',
         description: 'A massive dragon sleeps on a pile of gold. This is the final challenge!',
+        coordinates: { x: 2, y: 2 },
         enemy: {
             name: 'Ancient Dragon',
             health: 100,
@@ -158,8 +166,22 @@ function movePlayer(direction) {
     }
     
     gameState.currentRoom = nextRoom;
+    
+    // Track explored rooms
+    if (!gameState.exploredRooms.includes(nextRoom)) {
+        gameState.exploredRooms.push(nextRoom);
+    }
+    if (!gameState.visitedRooms.includes(nextRoom)) {
+        gameState.visitedRooms.push(nextRoom);
+    }
+    
     appendToGameplay(`<p>You move ${direction}...</p>`);
     displayRoom();
+    
+    // Update map if available
+    if (window.dungeonMap) {
+        window.dungeonMap.updateMap();
+    }
     
     // Auto-save progress
     if (window.saveManager) {
@@ -284,6 +306,8 @@ function initGame() {
             gameState.completedChallenges = savedState.completedChallenges || [];
             gameState.unlockedDoors = savedState.unlockedDoors || [];
             gameState.defeatedEnemies = savedState.defeatedEnemies || [];
+            gameState.exploredRooms = savedState.exploredRooms || ['entrance'];
+            gameState.visitedRooms = savedState.visitedRooms || ['entrance'];
             
             clearGameplay();
             appendToGameplay(`<p class="highlight">🎮 Welcome back to Dungeon Crawler Carl!</p>`);
@@ -314,11 +338,18 @@ function resetGame() {
     gameState.completedChallenges = [];
     gameState.unlockedDoors = [];
     gameState.defeatedEnemies = [];
+    gameState.exploredRooms = ['entrance'];
+    gameState.visitedRooms = ['entrance'];
     
     // Clear saved data
     if (window.saveManager) {
         window.saveManager.clearSaveData();
         window.saveManager.clearLessonProgress();
+    }
+    
+    // Update map if available
+    if (window.dungeonMap) {
+        window.dungeonMap.updateMap();
     }
     
     // Reinitialize game display

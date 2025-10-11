@@ -22,6 +22,11 @@
         <div class="lessons-button-container">
             <button id="lessonsButton" class="btn-lessons">📚 Lessons</button>
         </div>
+        
+        <!-- Map Button -->
+        <div class="map-button-container">
+            <button id="mapButton" class="btn-map">🗺️ Dungeon Map</button>
+        </div>
 
         <!-- Code Editor Section -->
         <section class="code-section">
@@ -51,10 +56,51 @@
             </div>
         </section>
     </div>
+    
+    <!-- Map Modal -->
+    <div id="mapModal" class="map-modal">
+        <div class="map-modal-content">
+            <div class="map-header">
+                <h2>🗺️ Dungeon Map</h2>
+                <button id="closeMap" class="btn-close-map">✕</button>
+            </div>
+            <canvas id="mapCanvas" width="600" height="500"></canvas>
+            <div class="map-legend">
+                <h3>Legend:</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="legend-symbol player-symbol">+</span>
+                        <span>Your Position</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-symbol">○</span>
+                        <span>Visibility Range (10m)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-symbol door-locked">●</span>
+                        <span>Locked Door</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-symbol door-unlocked">●</span>
+                        <span>Unlocked Door</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-symbol enemy-symbol">+</span>
+                        <span>Enemy</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-symbol npc-symbol">+</span>
+                        <span>NPC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="save-manager.js"></script>
     <script src="ui-components.js"></script>
     <script src="game.js"></script>
+    <script src="map.js"></script>
     <script src="terminal.js"></script>
     <script src="app.js"></script>
 </body>
