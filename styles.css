@@ -27,12 +27,42 @@ body {
     border: 2px solid #00ff00;
     border-radius: 5px;
     text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .title-bar h1 {
     font-size: 1.5rem;
     color: #00ff00;
     text-shadow: 0 0 10px #00ff00;
+    flex: 1;
+}
+
+.btn-lessons {
+    position: absolute;
+    right: 15px;
+    padding: 8px 15px;
+    background-color: #00ff00;
+    color: #000;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-lessons:hover {
+    background-color: #00cc00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+}
+
+.btn-lessons:active {
+    transform: translateY(0);
 }
 
 /* Section Headers */
