@@ -4,7 +4,9 @@ const lessons = window.lessonData || [];
 
 // Lesson State
 let currentLessonIndex = 0;
+let currentQuestionIndex = 0;
 let completedLessons = [];
+let questionResults = {}; // Track results for each question
 
 // Initialize lessons page
 function initLessons() {
@@ -115,6 +117,8 @@ function loadLesson(index) {
 
     const lesson = lessons[index];
     currentLessonIndex = index;
+    currentQuestionIndex = 0; // Reset to first question
+    questionResults = {}; // Reset results
 
     // Update title
     document.getElementById('lessonTitle').textContent = lesson.title;
@@ -122,106 +126,224 @@ function loadLesson(index) {
     // Update explanation
     document.getElementById('lessonExplanation').innerHTML = lesson.explanation;
 
-    // Setup fill-in-the-blanks
-    setupFillInBlanks(lesson.fillInBlanks);
-
-    // Setup practice section
-    document.getElementById('practicePrompt').textContent = lesson.practice.prompt;
-    document.getElementById('practiceEditor').value = '';
-    document.getElementById('practiceOutput').classList.remove('show');
-    document.getElementById('practiceOutput').innerHTML = '';
+    // Load first question
+    loadQuestion(0);
 
     // Update navigation buttons
     document.getElementById('prevLesson').disabled = index === 0;
     document.getElementById('nextLesson').disabled = index === lessons.length - 1;
-
-    // Clear results
-    document.getElementById('blanksResult').classList.remove('show');
 }
 
-// Setup fill-in-the-blanks section
-function setupFillInBlanks(fillInBlanks) {
-    const container = document.getElementById('fillInBlanks');
-    container.innerHTML = '';
+// Load a specific question
+function loadQuestion(questionIndex) {
+    const lesson = lessons[currentLessonIndex];
+    if (!lesson.questions || questionIndex < 0 || questionIndex >= lesson.questions.length) return;
 
-    const parts = fillInBlanks.template.split('___');
+    currentQuestionIndex = questionIndex;
+    const question = lesson.questions[questionIndex];
+
+    // Update question counter
+    document.getElementById('questionCounter').textContent = 
+        `Question ${questionIndex + 1} of ${lesson.questions.length}`;
+
+    // Update question navigation buttons
+    document.getElementById('prevQuestion').disabled = questionIndex === 0;
+    document.getElementById('nextQuestion').disabled = questionIndex === lesson.questions.length - 1;
+
+    // Clear previous content
+    document.getElementById('questionContainer').innerHTML = '';
+    document.getElementById('questionResult').classList.remove('show');
+    document.getElementById('questionResult').className = 'result-message';
+
+    // Render question based on type
+    if (question.type === 'multiple-choice') {
+        renderMultipleChoice(question);
+    } else if (question.type === 'fill-in-blank') {
+        renderFillInBlank(question);
+    } else if (question.type === 'code') {
+        renderCodeQuestion(question);
+    }
+
+    // Show previous result if exists
+    if (questionResults[question.id]) {
+        showQuestionResult(questionResults[question.id]);
+    }
+}
+
+// Render multiple choice question
+function renderMultipleChoice(question) {
+    const container = document.getElementById('questionContainer');
+    
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = question.question;
+    container.appendChild(questionText);
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'options-container';
+
+    question.options.forEach((option, index) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option-item';
+        
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = 'answer';
+        radio.value = index;
+        radio.id = `option-${index}`;
+        
+        const label = document.createElement('label');
+        label.htmlFor = `option-${index}`;
+        label.textContent = option;
+        
+        optionDiv.appendChild(radio);
+        optionDiv.appendChild(label);
+        optionsContainer.appendChild(optionDiv);
+
+        // Add click handler to label for better UX
+        label.addEventListener('click', () => {
+            radio.checked = true;
+        });
+    });
+
+    container.appendChild(optionsContainer);
+}
+
+// Render fill-in-the-blank question
+function renderFillInBlank(question) {
+    const container = document.getElementById('questionContainer');
+    
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = question.question;
+    container.appendChild(questionText);
+
+    const blankContainer = document.createElement('div');
+    blankContainer.className = 'fill-in-blanks';
+    
+    const parts = question.template.split('___');
     
     parts.forEach((part, index) => {
-        // Add text part
         const textSpan = document.createElement('span');
         textSpan.textContent = part;
-        container.appendChild(textSpan);
+        blankContainer.appendChild(textSpan);
 
-        // Add input for blank (except after last part)
         if (index < parts.length - 1) {
             const input = document.createElement('input');
             input.type = 'text';
             input.className = 'blank-input';
             input.dataset.index = index;
-            container.appendChild(input);
+            blankContainer.appendChild(input);
         }
     });
+
+    container.appendChild(blankContainer);
 }
 
-// Check fill-in-the-blanks answers
-function checkFillInBlanks() {
-    const lesson = lessons[currentLessonIndex];
-    const inputs = document.querySelectorAll('.blank-input');
-    const resultDiv = document.getElementById('blanksResult');
-    let allCorrect = true;
+// Render code question
+function renderCodeQuestion(question) {
+    const container = document.getElementById('questionContainer');
+    
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.textContent = question.question;
+    container.appendChild(questionText);
 
-    inputs.forEach((input, index) => {
-        const userAnswer = input.value.trim();
-        const correctAnswer = lesson.fillInBlanks.blanks[index];
+    const editor = document.createElement('textarea');
+    editor.className = 'practice-editor';
+    editor.id = 'codeEditor';
+    editor.placeholder = '// Write your JavaScript code here...';
+    container.appendChild(editor);
+
+    const output = document.createElement('div');
+    output.className = 'practice-output';
+    output.id = 'codeOutput';
+    container.appendChild(output);
+}
+
+// Check current question answer
+function checkAnswer() {
+    const lesson = lessons[currentLessonIndex];
+    const question = lesson.questions[currentQuestionIndex];
+    let isCorrect = false;
+    let userAnswer = null;
+
+    if (question.type === 'multiple-choice') {
+        const selected = document.querySelector('input[name="answer"]:checked');
+        if (!selected) {
+            showFeedback('Please select an answer first!', 'error');
+            return;
+        }
+        userAnswer = parseInt(selected.value);
+        isCorrect = userAnswer === question.correctAnswer;
+    } else if (question.type === 'fill-in-blank') {
+        const inputs = document.querySelectorAll('.blank-input');
+        isCorrect = true;
         
-        let isCorrect = false;
-        if (correctAnswer.caseSensitive) {
-            isCorrect = userAnswer === correctAnswer.answer;
-            if (!isCorrect && correctAnswer.alternatives) {
-                isCorrect = correctAnswer.alternatives.includes(userAnswer);
+        inputs.forEach((input, index) => {
+            const correctBlank = question.blanks[index];
+            const userValue = input.value.trim();
+            
+            let isBlankCorrect = false;
+            if (correctBlank.caseSensitive) {
+                isBlankCorrect = userValue === correctBlank.answer;
+                if (!isBlankCorrect && correctBlank.alternatives) {
+                    isBlankCorrect = correctBlank.alternatives.includes(userValue);
+                }
+            } else {
+                isBlankCorrect = userValue.toLowerCase() === correctBlank.answer.toLowerCase();
+                if (!isBlankCorrect && correctBlank.alternatives) {
+                    isBlankCorrect = correctBlank.alternatives.some(alt => 
+                        alt.toLowerCase() === userValue.toLowerCase()
+                    );
+                }
             }
-        } else {
-            isCorrect = userAnswer.toLowerCase() === correctAnswer.answer.toLowerCase();
-            if (!isCorrect && correctAnswer.alternatives) {
-                isCorrect = correctAnswer.alternatives.some(alt => 
-                    alt.toLowerCase() === userAnswer.toLowerCase()
-                );
+
+            if (isBlankCorrect) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+            } else {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+                isCorrect = false;
             }
+        });
+    } else if (question.type === 'code') {
+        const code = document.getElementById('codeEditor').value;
+        if (!code.trim()) {
+            showFeedback('Please write some code first!', 'error');
+            return;
         }
 
-        if (isCorrect) {
-            input.classList.remove('incorrect');
-            input.classList.add('correct');
-        } else {
-            input.classList.remove('correct');
-            input.classList.add('incorrect');
-            allCorrect = false;
+        // Execute code and check solution
+        const result = executeCode(code);
+        if (result.error) {
+            showFeedback(`❌ Error: ${result.error}`, 'error');
+            return;
         }
-    });
-
-    resultDiv.classList.add('show');
-    if (allCorrect) {
-        resultDiv.className = 'result-message show success';
-        resultDiv.textContent = '✅ Correct! Great job!';
-    } else {
-        resultDiv.className = 'result-message show error';
-        resultDiv.textContent = '❌ Not quite right. Try again!';
+        
+        isCorrect = question.solution(result.output, code);
+        
+        // Show output
+        const outputDiv = document.getElementById('codeOutput');
+        outputDiv.innerHTML = result.output ? 
+            `<div class="output-line">Output: ${result.output}</div>` : 
+            `<div class="output-line">No output produced.</div>`;
+        outputDiv.classList.add('show');
     }
+
+    // Store result
+    questionResults[question.id] = { correct: isCorrect, explanation: question.explanation };
+
+    // Show result
+    showQuestionResult({ correct: isCorrect, explanation: question.explanation });
+
+    // Mark lesson complete if all questions answered correctly
+    checkLessonCompletion();
 }
 
-// Run practice code
-function runPracticeCode() {
-    const code = document.getElementById('practiceEditor').value;
-    const outputDiv = document.getElementById('practiceOutput');
-    const lesson = lessons[currentLessonIndex];
-
-    if (!code.trim()) {
-        outputDiv.innerHTML = '<div class="error-line">❌ Please write some code first!</div>';
-        outputDiv.classList.add('show');
-        return;
-    }
-
-    // Execute code and capture output
+// Execute code safely
+function executeCode(code) {
     let output = '';
     let error = null;
     
@@ -241,39 +363,67 @@ function runPracticeCode() {
         console.log = originalLog;
     }
 
-    // Display output
-    outputDiv.innerHTML = '';
+    return { output, error };
+}
+
+// Show question result
+function showQuestionResult(result) {
+    const resultDiv = document.getElementById('questionResult');
+    resultDiv.classList.add('show');
     
-    if (error) {
-        outputDiv.innerHTML = `<div class="error-line">❌ Error: ${error}</div>`;
+    if (result.correct) {
+        resultDiv.className = 'result-message show success';
+        resultDiv.innerHTML = `✅ Correct! Great job!<br><small>${result.explanation}</small>`;
     } else {
-        if (output) {
-            outputDiv.innerHTML += `<div class="output-line">Output: ${output}</div>`;
-        } else {
-            outputDiv.innerHTML += `<div class="output-line">No output produced.</div>`;
-        }
-
-        // Check if solution is correct
-        if (lesson.practice.solution(output, code)) {
-            outputDiv.innerHTML += '<div class="success-line">✅ Perfect! You solved it!</div>';
-            
-            // Mark lesson as completed
-            if (!completedLessons.includes(lesson.id)) {
-                completedLessons.push(lesson.id);
-                // Use save manager if available, otherwise use localStorage
-                if (window.saveManager) {
-                    window.saveManager.saveLessonCompletion(lesson.id);
-                } else {
-                    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
-                }
-                renderLessonList();
-            }
-        } else {
-            outputDiv.innerHTML += '<div class="error-line">❌ Not quite right. Check the requirements and try again.</div>';
-        }
+        resultDiv.className = 'result-message show error';
+        resultDiv.innerHTML = `❌ Not quite right. ${result.explanation}<br><small>Try again!</small>`;
     }
+}
 
-    outputDiv.classList.add('show');
+// Show temporary feedback
+function showFeedback(message, type) {
+    const resultDiv = document.getElementById('questionResult');
+    resultDiv.classList.add('show');
+    resultDiv.className = `result-message show ${type}`;
+    resultDiv.textContent = message;
+}
+
+// Check if lesson is complete
+function checkLessonCompletion() {
+    const lesson = lessons[currentLessonIndex];
+    const allCorrect = lesson.questions.every(q => 
+        questionResults[q.id] && questionResults[q.id].correct
+    );
+
+    if (allCorrect && !completedLessons.includes(lesson.id)) {
+        completedLessons.push(lesson.id);
+        if (window.saveManager) {
+            window.saveManager.saveLessonCompletion(lesson.id);
+        } else {
+            localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+        }
+        renderLessonList();
+        
+        // Show completion message
+        setTimeout(() => {
+            showFeedback('🎉 Lesson Complete! All questions answered correctly!', 'success');
+        }, 500);
+    }
+}
+
+// Navigate to previous question
+function previousQuestion() {
+    if (currentQuestionIndex > 0) {
+        loadQuestion(currentQuestionIndex - 1);
+    }
+}
+
+// Navigate to next question
+function nextQuestion() {
+    const lesson = lessons[currentLessonIndex];
+    if (currentQuestionIndex < lesson.questions.length - 1) {
+        loadQuestion(currentQuestionIndex + 1);
+    }
 }
 
 // Setup event listeners
@@ -283,13 +433,14 @@ function setupEventListeners() {
         window.location.href = 'lesson-select.html';
     });
 
-    // Check blanks button
-    document.getElementById('checkBlanks').addEventListener('click', checkFillInBlanks);
+    // Check answer button
+    document.getElementById('checkAnswer').addEventListener('click', checkAnswer);
 
-    // Run practice button
-    document.getElementById('runPractice').addEventListener('click', runPracticeCode);
+    // Question navigation
+    document.getElementById('prevQuestion').addEventListener('click', previousQuestion);
+    document.getElementById('nextQuestion').addEventListener('click', nextQuestion);
 
-    // Navigation buttons
+    // Lesson navigation buttons
     document.getElementById('prevLesson').addEventListener('click', () => {
         if (currentLessonIndex > 0) {
             const prevLesson = lessons[currentLessonIndex - 1];
@@ -304,17 +455,17 @@ function setupEventListeners() {
         }
     });
 
-    // Allow Ctrl+Enter to run practice code
-    document.getElementById('practiceEditor').addEventListener('keydown', (event) => {
+    // Allow Ctrl+Enter to check answer/run code
+    document.getElementById('questionContainer').addEventListener('keydown', (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
             event.preventDefault();
-            runPracticeCode();
+            checkAnswer();
         }
     });
 
-    // Clear result when typing in blanks
-    document.getElementById('fillInBlanks').addEventListener('input', () => {
-        document.getElementById('blanksResult').classList.remove('show');
+    // Clear result when interacting with question
+    document.getElementById('questionContainer').addEventListener('input', () => {
+        document.getElementById('questionResult').classList.remove('show');
     });
 }
 

@@ -631,13 +631,6 @@ console.log(fullName);  // "Carl Smith"</code></pre>
             }
         ]
     },
-                return code.includes('weapon') && 
-                       code.includes('sword') &&
-                       code.includes('toUpperCase') &&
-                       output.includes('SWORD');
-            }
-        }
-    },
 
     // === INTERMEDIATE LEVEL ===
     {
